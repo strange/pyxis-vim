@@ -1,9 +1,9 @@
 # Pyxis
 
-A quick way to open files relying on external dependencies such as
-interpreters or compilers. The previous statement is not entirely true as the
-script uses `find` to load the cache, but this can be configured to use the
-built-in `globpath` command instead.
+A quick way to open files in vim without relying on the availability of
+external dependencies such as interpreters or compilers. The previous
+statement is not entirely true as the script uses `find` to load the cache,
+but this can be configured to use the built-in `globpath` command instead.
 
 No fancy features such as approximate string matching here. `/` works as a
 matching delimiter though, so you can input `do/` to list all files in `doc/`
