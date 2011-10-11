@@ -15,14 +15,13 @@ if !exists("g:pyxis_ignore")
 endif
 
 function! pyxis#InitUI()
-    let s:_winno = winnr()
     let s:_completeopt = &completeopt
     let s:_splitbelow = &splitbelow
     let s:_paste = &paste
+    let s:_ttimeoutlen = &ttimeoutlen
 
     set nosplitbelow " Always show the completion-window above current
     exec '1split [Start typing the name of a file ...]'
-    let s:bufno = bufnr('%')
     setlocal nobuflisted " Do not show in buf list
     setlocal nonumber " Do not display line numbers
     setlocal noswapfile " Do not use a swapfile for the buffer
@@ -33,35 +32,34 @@ function! pyxis#InitUI()
     setlocal winfixheight " Keep height when other windows are opened
     setlocal textwidth=0 " No maximum text width
     setlocal nopaste " Paste mode interferes
+    setlocal statusline=%f
+    set ttimeoutlen=0 " Make <Esc> snappy while preserving arrow keys
     set completeopt=menuone " Use popup with only one match
     set completefunc=pyxis#CompleteFunc
-    delete " Delete any text
+    let s:bufno = bufnr('%')
     startinsert! " Enter insert mode
 
-    augroup CompleterMovements
-        autocmd!
-        autocmd InsertLeave <buffer> call s:Reset()
-        autocmd BufLeave <buffer> call s:Reset()
-    augroup END
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
+
     inoremap <silent> <buffer> <CR> <C-Y><C-R>=pyxis#OpenFile()<CR>
     inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=pyxis#OpenFile()<CR>
-    inoremap <silent> <buffer> <C-C> <C-R>=<SID>Reset()<CR>
-    inoremap <silent> <buffer> <C-H> <C-R>=<SID>Action()<CR><C-H>
-    inoremap <silent> <buffer> <BS> <C-R>=<SID>Action()<CR><BS>
-    inoremap <silent> <buffer> <Space> <Space><C-R>=<SID>Action()<CR>
-    " CursorMovedI does not seem to work consistently. This is a temp fix.
-    let ino = "inoremap <silent> <buffer> %c %c\<C-R>=\<SID>Action()\<CR>"
-    for chr in range(33, 123) + range(125, 126)
-        exec printf(ino, chr, chr)
-    endfor
+
+    inoremap <silent> <buffer> <C-C> <C-E><C-R>=<SID>Reset()<CR>
+    inoremap <silent> <buffer> <C-W> <C-E><C-R>=<SID>Reset()<CR>
+
+    augroup Pyxis
+        autocmd!
+        autocmd CursorMovedI <buffer> call s:Search()
+        autocmd InsertLeave <buffer> call s:Reset()
+    augroup end
 endfunction
 
 function! s:Reset()
-    let &completeopt=s:_completeopt
+    stopinsert!
     exec 'bdelete! '.s:bufno
-    exec s:_winno.'wincmd w'
+    let &completeopt=s:_completeopt
+    let &ttimeoutlen=s:_ttimeoutlen
     if s:_paste
         set paste
     endif
@@ -71,17 +69,17 @@ function! s:Reset()
     return ''
 endfunction
 
-function! s:Action()
+function! s:Search()
     call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
     return ''
 endfunction
 
 function! pyxis#OpenFile()
+    stopinsert!
     let filename = getline('.')
-    stopinsert! " This should trigger InsertLeave?
     call s:Reset()
     if !empty(filename)
-        exec ":silent edit ".filename
+        exec ":silent edit ".fnameescape(filename)
     endif
 endfunction
 
@@ -92,7 +90,7 @@ function! pyxis#CompleteFunc(start, base)
     if empty(a:base)
         return []
     endif
-    let result = s:FileSeach(a:base)
+    let result = s:Match(a:base)
     if !empty(result)
         call feedkeys("\<C-P>\<Down>", 'n')
     endif
@@ -122,12 +120,12 @@ function! pyxis#UpdateCache(force)
         echo "Updating cache ..."
         let s:cache = map(s:BuildCacheFind(), 'v:val[2:]')
         let s:path = path
-        echo "Cache update done!"
+        redraw | echo "Cache updated!"
     endif
 endfunction
 
-function! s:FileSeach(needle)
+function! s:Match(needle)
     call pyxis#UpdateCache(0)
-    let n = substitute(fnameescape(a:needle), '\/', '.*\/.*', 'g').'[^\/]*$'
+    let n = substitute(a:needle, '\/', '.*\/.*', 'g').'[^\/]*$'
     return filter(s:cache[:], 'v:val =~? n')[:300]
 endfunction
