@@ -42,8 +42,8 @@ function! pyxis#InitUI()
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
 
-    inoremap <silent> <buffer> <CR> <C-Y><C-R>=pyxis#OpenFile()<CR>
-    inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=pyxis#OpenFile()<CR>
+    inoremap <silent> <buffer> <CR> <C-Y><C-R>=<SID>OpenFile()<CR>
+    inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=<SID>OpenFile()<CR>
 
     inoremap <silent> <buffer> <C-C> <C-E><C-R>=<SID>Reset()<CR>
     inoremap <silent> <buffer> <C-W> <C-E><C-R>=<SID>Reset()<CR>
@@ -74,7 +74,7 @@ function! s:Search()
     return ''
 endfunction
 
-function! pyxis#OpenFile()
+function! s:OpenFile()
     stopinsert!
     let filename = getline('.')
     call s:Reset()
