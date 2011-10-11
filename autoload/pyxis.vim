@@ -1,6 +1,6 @@
 " A simple Vim script that makes for quick finding and opening files
 " Maintainer: Gustaf Sjöberg <gs@distrop.com>
-" Last Change: 2010 Mar 07
+" Last Change: 2011 Oct 12
 "
 " Drop this script in your ~/.vim/autoload directory.
 
