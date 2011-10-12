@@ -66,11 +66,16 @@ function! s:Reset()
     if s:_splitbelow
         set splitbelow
     endif
+    let s:last_column = 0
     return ''
 endfunction
 
+let s:last_column = 0
 function! s:Search()
-    call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
+    if col('.') != s:last_column
+        call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
+        let s:last_column = col('.')
+    endif
     return ''
 endfunction
 
