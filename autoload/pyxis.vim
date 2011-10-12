@@ -75,7 +75,6 @@ function! s:Search()
 endfunction
 
 function! s:OpenFile()
-    stopinsert!
     let filename = getline('.')
     call s:Reset()
     if !empty(filename)
@@ -90,11 +89,7 @@ function! pyxis#CompleteFunc(start, base)
     if empty(a:base)
         return []
     endif
-    let result = s:Match(a:base)
-    if !empty(result)
-        call feedkeys("\<C-P>\<Down>", 'n')
-    endif
-    return result
+    return s:Match(a:base)
 endfunction
 
 function! s:BuildCacheFind()
@@ -127,6 +122,11 @@ endfunction
 
 function! s:Match(needle)
     call s:UpdateCache(0)
-    let n = substitute(a:needle, '\/', '.*\/.*', 'g').'[^\/]*$'
-    return filter(s:cache[:], 'v:val =~? n')[:300]
+    let specials = [['/', '.*/.*'], ['_', '.*_.*']]
+    let needle = a:needle
+    for special in specials
+        let needle = substitute(needle, special[0], special[1], 'g')
+    endfor
+    let needle = needle.'[^/]*$'
+    return filter(s:cache[:], 'v:val =~? needle')[:300]
 endfunction
