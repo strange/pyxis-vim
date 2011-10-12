@@ -50,9 +50,19 @@ function! pyxis#InitUI()
 
     augroup Pyxis
         autocmd!
-        autocmd CursorMovedI <buffer> call s:Search()
+        autocmd CursorMovedI <buffer> call s:CursorMoved()
         autocmd InsertLeave <buffer> call s:Reset()
     augroup end
+endfunction
+
+function! pyxis#CompleteFunc(start, base)
+    if a:start == 1
+        return 0
+    endif
+    if empty(a:base)
+        return []
+    endif
+    return s:Match(a:base)
 endfunction
 
 function! s:Reset()
@@ -71,7 +81,7 @@ function! s:Reset()
 endfunction
 
 let s:last_column = 0
-function! s:Search()
+function! s:CursorMoved()
     let cur_column = col('.')
     if cur_column != s:last_column
         call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
@@ -86,16 +96,6 @@ function! s:OpenFile()
     if !empty(filename)
         exec ":silent edit ".fnameescape(filename)
     endif
-endfunction
-
-function! pyxis#CompleteFunc(start, base)
-    if a:start == 1
-        return 0
-    endif
-    if empty(a:base)
-        return []
-    endif
-    return s:Match(a:base)
 endfunction
 
 function! s:BuildCacheFind()
@@ -128,11 +128,8 @@ endfunction
 
 function! s:Match(needle)
     call s:UpdateCache(0)
-    let specials = [['/', '.*/.*'], ['_', '.*_.*']]
-    let needle = a:needle
-    for special in specials
-        let needle = substitute(needle, special[0], special[1], 'g')
-    endfor
-    let needle = needle.'[^/]*$'
-    return filter(s:cache[:], 'v:val =~? needle')[:300]
+    let n = escape(a:needle, '/\.')
+    let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
+    let n = n.'[^/]*$'
+    return filter(s:cache[:], 'v:val =~? n')[:300]
 endfunction
