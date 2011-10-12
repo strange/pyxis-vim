@@ -21,7 +21,9 @@ function! pyxis#InitUI()
     let s:_ttimeoutlen = &ttimeoutlen
 
     set nosplitbelow " Always show the completion-window above current
+
     exec '1split [Start typing the name of a file ...]'
+    
     setlocal nobuflisted " Do not show in buf list
     setlocal nonumber " Do not display line numbers
     setlocal noswapfile " Do not use a swapfile for the buffer
@@ -33,10 +35,13 @@ function! pyxis#InitUI()
     setlocal textwidth=0 " No maximum text width
     setlocal nopaste " Paste mode interferes
     setlocal statusline=%f
+
     set ttimeoutlen=0 " Make <Esc> snappy while preserving arrow keys
     set completeopt=menuone " Use popup with only one match
     set completefunc=pyxis#CompleteFunc
+
     let s:bufno = bufnr('%')
+
     startinsert! " Enter insert mode
 
     inoremap <silent> <buffer> <Tab> <Down>
@@ -44,15 +49,17 @@ function! pyxis#InitUI()
 
     inoremap <silent> <buffer> <CR> <C-Y><C-R>=<SID>OpenFile()<CR>
     inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=<SID>OpenFile()<CR>
+    inoremap <silent> <buffer> <C-V> <C-Y><C-R>=<SID>OpenFile('vsplit')<CR>
+    inoremap <silent> <buffer> <C-H> <C-Y><C-R>=<SID>OpenFile('split')<CR>
 
     inoremap <silent> <buffer> <C-C> <C-E><C-R>=<SID>Reset()<CR>
-    inoremap <silent> <buffer> <C-W> <C-E><C-R>=<SID>Reset()<CR>
 
     augroup Pyxis
         autocmd!
         autocmd CursorMovedI <buffer> call s:CursorMoved()
         autocmd InsertLeave <buffer> call s:Reset()
     augroup end
+
 endfunction
 
 function! pyxis#CompleteFunc(start, base)
@@ -90,11 +97,11 @@ function! s:CursorMoved()
     return ''
 endfunction
 
-function! s:OpenFile()
+function! s:OpenFile(open)
     let filename = getline('.')
     call s:Reset()
     if !empty(filename)
-        exec ":silent edit ".fnameescape(filename)
+        exec ":silent ".empty(a:open)?"edit":a:open." ".fnameescape(filename)
     endif
 endfunction
 
