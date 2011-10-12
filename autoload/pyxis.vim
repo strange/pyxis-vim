@@ -72,9 +72,10 @@ endfunction
 
 let s:last_column = 0
 function! s:Search()
-    if col('.') != s:last_column
+    let cur_column = col('.')
+    if cur_column != s:last_column
         call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
-        let s:last_column = col('.')
+        let s:last_column = cur_column
     endif
     return ''
 endfunction
