@@ -97,11 +97,11 @@ function! s:CursorMoved()
     return ''
 endfunction
 
-function! s:OpenFile(open)
+function! s:OpenFile(...)
     let filename = getline('.')
     call s:Reset()
     if !empty(filename)
-        exec ":silent ".empty(a:open)?"edit":a:open." ".fnameescape(filename)
+        exec ":silent ".(a:0 == 1 ? a:1 : "edit")." ".fnameescape(filename)
     endif
 endfunction
 
