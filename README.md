@@ -4,8 +4,8 @@ A simple script that provides mechanisms to quickly find and open files.
 
 A major design goal was ease-of-installation; the script does not depend on
 vim being compiled with support for any "special" features. This comes at the
-price of not being able to (feasibly) add fancy features like approximate
-string matching (overrated anyway, right) etc.
+price of not being able to (feasibly) add fancy things like approximate string
+matching (overrated anyway, right) etc.
 
 
 ## Installation
