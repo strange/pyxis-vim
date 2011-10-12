@@ -27,7 +27,8 @@ Something like the following to your .vimrc might be nice:
     noremap <leader>e :Pyxis<CR>
     noremap <leader>E :PyxisUpdateCache<CR>
 
-`<Tab>`, `<S-Tab>`, `<Down>` and `<Up>` cycles between entries in the list.
+Use `<Tab>`, `<S-Tab>`, `<Down>` and `<Up>` to navigate between entries in the
+list.
 
 `<CR>` opens selected file in currently active window. `<C-h>` and `<C-v>`
 opens the file in horizontal and vertical splits, respectively.
