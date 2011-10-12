@@ -25,7 +25,7 @@ An in-memory cache will be populated during the first run. You can use
 Something like the following to your .vimrc might be nice:
 
     noremap <leader>e :Pyxis<CR>
-    noremap <silent> <leader>E :PyxisUpdateCache<CR>
+    noremap <leader>E :PyxisUpdateCache<CR>
 
 `<Tab>`, `<S-Tab>`, `<Down>` and `<Up>` cycles between entries in the list.
 

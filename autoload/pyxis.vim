@@ -122,7 +122,7 @@ endfunction
 
 let s:path = ''
 let s:cache = []
-function! s:UpdateCache(force)
+function! pyxis#UpdateCache(force)
     let path = getcwd()
     if a:force || empty(s:cache) || path != s:path
         echo "Updating cache ..."
@@ -134,7 +134,7 @@ function! s:UpdateCache(force)
 endfunction
 
 function! s:Match(needle)
-    call s:UpdateCache(0)
+    call pyxis#UpdateCache(0)
     let n = escape(a:needle, '/\.')
     let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
     let n = n.'[^/]*$'
