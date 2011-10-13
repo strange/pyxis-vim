@@ -60,7 +60,6 @@ function! pyxis#InitUI()
         autocmd CursorMovedI <buffer> call s:CursorMoved()
         autocmd InsertLeave <buffer> call s:Reset()
     augroup end
-
 endfunction
 
 function! pyxis#CompleteFunc(start, base)
