@@ -135,7 +135,7 @@ endfunction
 
 function! s:Match(needle)
     call pyxis#UpdateCache(0)
-    let n = escape(a:needle, '/\.')
+    let n = escape(a:needle, '/\.~^$')
     let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
     let n = n.'[^/]*$'
     return filter(s:cache[:], 'v:val =~? n')[:300]
