@@ -22,7 +22,7 @@ what you typed).
 An in-memory cache will be populated during the first run. You can use
 `:PyxisUpdateCache` to manually update the cache.
 
-Something like the following to your .vimrc might be nice:
+Something like the following in your .vimrc might be nice:
 
     noremap <leader>e :Pyxis<CR>
     noremap <leader>E :PyxisUpdateCache<CR>
