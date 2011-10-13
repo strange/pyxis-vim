@@ -42,7 +42,7 @@ function! pyxis#InitUI()
 
     let s:bufno = bufnr('%')
 
-    startinsert! " Enter insert mode
+    startinsert!
 
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
