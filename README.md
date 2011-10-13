@@ -31,7 +31,8 @@ Use `<Tab>`, `<S-Tab>`, `<Down>` and `<Up>` to navigate between entries in the
 list.
 
 `<CR>` opens selected file in currently active window. `<C-h>` and `<C-v>`
-opens the file in horizontal and vertical splits, respectively.
+opens the file in horizontal and vertical splits, respectively. `<C-t>` opens
+the file in a new tab.
 
 `/` and `_` in quries work as matching delimiters. You can, for example, type
 `do/` to see all files located in `doc/` and `help/documentation/`, or `h_w`

@@ -51,6 +51,7 @@ function! pyxis#InitUI()
     inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=<SID>OpenFile()<CR>
     inoremap <silent> <buffer> <C-V> <C-Y><C-R>=<SID>OpenFile('vsplit')<CR>
     inoremap <silent> <buffer> <C-H> <C-Y><C-R>=<SID>OpenFile('split')<CR>
+    inoremap <silent> <buffer> <C-T> <C-Y><C-R>=<SID>OpenFile('tabnew')<CR>
 
     inoremap <silent> <buffer> <C-C> <C-E><C-R>=<SID>Reset()<CR>
 
