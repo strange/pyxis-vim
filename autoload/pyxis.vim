@@ -85,7 +85,7 @@ function! s:Reset()
     if s:_splitbelow
         set splitbelow
     endif
-    let s:last_column = 0
+    let s:last_col = 0
     return ''
 endfunction
 
