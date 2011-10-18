@@ -14,6 +14,7 @@ if !exists("g:pyxis_ignore")
                          \*~,*.o,*.class,*.ai,*.plist,*.swp,*.mp3,*.db,*.beam"
 endif
 
+let s:_prompt = '> '
 function! pyxis#InitUI()
     let s:_completeopt = &completeopt
     let s:_splitbelow = &splitbelow
@@ -42,8 +43,6 @@ function! pyxis#InitUI()
 
     let s:bufno = bufnr('%')
 
-    startinsert!
-
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
 
@@ -60,16 +59,19 @@ function! pyxis#InitUI()
         autocmd CursorMovedI <buffer> call s:CursorMoved()
         autocmd InsertLeave <buffer> call s:Reset()
     augroup end
+
+    " the prompt seems to fix a problem where `CursorMovedI` sometimes is not
+    " triggered if the pum is visible. found this fix while browsing the
+    " fuzzyfinder source code.
+    call setline(1, s:_prompt)
+    call feedkeys("A", 'n')
 endfunction
 
 function! pyxis#CompleteFunc(start, base)
     if a:start == 1
         return 0
     endif
-    if empty(a:base)
-        return []
-    endif
-    return s:Match(a:base)
+    return s:Match(a:base[len(s:_prompt):])
 endfunction
 
 function! s:Reset()
@@ -87,20 +89,31 @@ function! s:Reset()
     return ''
 endfunction
 
-let s:last_column = 0
+let s:last_col = 0
 function! s:CursorMoved()
-    let cur_column = col('.')
-    if cur_column != s:last_column
+    let cur_col = col(".")
+    if len(getline(".")) <= len(s:_prompt)
+        call setline('.', s:_prompt)
+        call feedkeys("\<END>", 'n')
+    elseif cur_col != s:last_col
         call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
-        let s:last_column = cur_column
     endif
+    let s:last_col = cur_col
     return ''
 endfunction
 
 function! s:OpenFile(...)
     let filename = getline('.')
+
+    " strip the prompt from the current line. this can prevent a valid file
+    " from being openened if it was selected using the pum and has a name that
+    " is equal to the prompt.
+    if filename[:len(s:_prompt) - 1] ==# s:_prompt
+        let filename = filename[len(s:_prompt):]
+    endif
+
     call s:Reset()
-    if !empty(filename)
+    if !empty(filename) && filename != s:_prompt
         exec ":silent ".(a:0 == 1 ? a:1 : "edit")." ".fnameescape(filename)
     endif
 endfunction
@@ -137,6 +150,5 @@ function! s:Match(needle)
     call pyxis#UpdateCache(0)
     let n = escape(a:needle, '/\.~^$')
     let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
-    " let n = n.'[^/]*$'
     return filter(s:cache[:], 'v:val =~? n')[:300]
 endfunction
