@@ -95,7 +95,8 @@ function! s:CursorMoved()
     if len(getline(".")) <= len(s:_prompt)
         call setline('.', s:_prompt)
         call feedkeys("\<END>", 'n')
-    elseif cur_col != s:last_col
+    endif
+    if cur_col != s:last_col
         call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
     endif
     let s:last_col = cur_col
@@ -150,5 +151,5 @@ function! s:Match(needle)
     call pyxis#UpdateCache(0)
     let n = escape(a:needle, '/\.~^$')
     let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
-    return filter(s:cache[:], 'v:val =~? n')[:300]
+    return filter(s:cache[:], 'v:val =~? n')[:1500]
 endfunction
