@@ -2,8 +2,6 @@
 " Maintainer: Gustaf Sjöberg <gs@distrop.com>
 " Last Change: 2010 Oct 12
 "
-" Drop this script in your ~/.vim/plugin directory.
-"
 " Open a search prompty with :Pyxis. Manually update the local search cache
 " with :PyxisUpdateCache.
 "
@@ -14,3 +12,4 @@
 
 command! Pyxis :call pyxis#InitUI()
 command! PyxisUpdateCache :call pyxis#UpdateCache(1)
+command! PyxisToggleMode :call pyxis#ToggleMode()

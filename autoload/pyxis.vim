@@ -1,8 +1,6 @@
 " A simple Vim script that makes for quick finding and opening files
 " Maintainer: Gustaf Sjöberg <gs@distrop.com>
 " Last Change: 2011 Oct 12
-"
-" Drop this script in your ~/.vim/autoload directory.
 
 if exists("g:loaded_pyxis")
     finish
@@ -17,6 +15,7 @@ if !exists("g:pyxis_ignore")
 endif
 
 let s:_prompt = '> '
+
 function! pyxis#InitUI()
     let s:_completeopt = &completeopt
     let s:_splitbelow = &splitbelow
@@ -74,6 +73,12 @@ function! pyxis#CompleteFunc(start, base)
         return 0
     endif
     return s:Match(a:base[len(s:_prompt):])
+endfunction
+
+let s:_onlyfiles = 1
+function! pyxis#ToggleMode()
+    let s:_onlyfiles = (!s:_onlyfiles)
+    call feedkeys("\<C-X>\<C-U>\<C-P>\<Down>", 'n')
 endfunction
 
 function! s:Reset()
@@ -153,5 +158,8 @@ function! s:Match(needle)
     call pyxis#UpdateCache(0)
     let n = escape(a:needle, '/\.~^$')
     let n = substitute(n, '\(\\\/\|_\)', '.*\1.*', 'g')
+    if s:_onlyfiles
+        let n = n.'[^/]*$'
+    endif
     return filter(s:cache[:], 'v:val =~? n')[:1500]
 endfunction
