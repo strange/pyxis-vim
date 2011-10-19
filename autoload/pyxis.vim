@@ -10,8 +10,10 @@ endif
 let g:loaded_pyxis = 1
 
 if !exists("g:pyxis_ignore")
-    let g:pyxis_ignore = "*.jpeg,*.jpg,*.pyo,*.pyc,.DS_Store,*.png,*.bmp,*.gif,
-                         \*~,*.o,*.class,*.ai,*.plist,*.swp,*.mp3,*.db,*.beam"
+    let g:pyxis_ignore = "*.jpeg,*.jpg,*.pyo,*.pyc,.DS_Store,*.png,*.bmp,
+                         \*.gif,*~,*.o,*.class,*.ai,*.plist,*.swp,*.mp3,*.db,
+                         \*.beam,*.pdf,*.swf,*.flv,*.mpeg,*.mp4,*.zip,*.tar,
+                         \*.tgz,*.tar.gz,*.wmv"
 endif
 
 let s:_prompt = '> '
