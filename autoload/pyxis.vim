@@ -83,7 +83,7 @@ endfunction
 
 function! s:Reset()
     stopinsert!
-    exec 'bdelete! '.s:bufno
+    exec 'bwipe! '.s:bufno
     let &completeopt=s:_completeopt
     let &ttimeoutlen=s:_ttimeoutlen
     if s:_paste
