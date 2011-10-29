@@ -25,6 +25,11 @@ function! pyxis#InitUI()
     set nosplitbelow " Always show the completion-window above current
 
     exec '1split [Start typing the name of a file ...]'
+
+    " the prompt seems to fix a problem where `CursorMovedI` sometimes is not
+    " triggered if the pum is visible. found this fix while browsing the
+    " fuzzyfinder source code.
+    call setline(1, s:_prompt)
     
     setlocal nobuflisted " Do not show in buf list
     setlocal nonumber " Do not display line numbers
@@ -61,10 +66,6 @@ function! pyxis#InitUI()
         autocmd InsertLeave <buffer> call s:Reset()
     augroup end
 
-    " the prompt seems to fix a problem where `CursorMovedI` sometimes is not
-    " triggered if the pum is visible. found this fix while browsing the
-    " fuzzyfinder source code.
-    call setline(1, s:_prompt)
     call feedkeys("A", 'n')
 endfunction
 
