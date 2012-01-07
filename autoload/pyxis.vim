@@ -35,7 +35,7 @@ function! pyxis#InitUI()
     setlocal nonumber " Do not display line numbers
     setlocal noswapfile " Do not use a swapfile for the buffer
     setlocal buftype=nofile " The buffer is not related to any file
-    setlocal bufhidden=delete " The buffer dies with the window
+    setlocal bufhidden=wipe " The buffer dies with the window
     setlocal noshowcmd " Be restrictive with what to show in statusbar
     setlocal nowrap " Do not wrap long lines
     setlocal winfixheight " Keep height when other windows are opened
@@ -84,6 +84,9 @@ endfunction
 
 function! s:Reset()
     stopinsert!
+    " prevent text entered in the ui-buffer from ending up in the dot-repeat
+    " register by entering and leaving insert mode.
+    call feedkeys("i\<Esc>", 'n')
     exec 'bwipe! '.s:bufno
     let &completeopt=s:_completeopt
     let &ttimeoutlen=s:_ttimeoutlen
