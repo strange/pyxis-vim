@@ -10,14 +10,21 @@ matching (overrated anyway, right?) etc.
 
 ## Installation
 
-http://vimcasts.org/episodes/synchronizing-plugins-with-git-submodules-and-pathogen/
+### Preferred Method
+
+Install [Vundle] and add `Bundle 'strange/pyxis-vim'` to your `.vimrc`.
+
+### Manual Install
+
+Copy `autoload/pyxis.vim` and `plugin/pyxis.vim` into corresponding
+directories in your vim plugin directory.
 
 
 ## Usage
 
 `:Pyxis` opens an "input field". A list containing matching files will be
 displayed as you start typing (assuming there are files in your cwd that match
-what you typed).
+what you've typed).
 
 An in-memory cache will be populated during the first run. You can use
 `:PyxisUpdateCache` to manually update the cache.
@@ -51,8 +58,8 @@ Current state of the project: works for me and I prefer it over other
 solutions.
 
 The script stores a list of all files in cwd in an in-memory cache. You
-currently need to manually update the cache when you remove or add files. I
-might fix this some day.
+currently update the cache manually when you remove or add files. I might fix
+this some day.
 
-I'll also have another look at how exclusion of files based on patterns could
-work better.
+
+[Vundle]:http://github.com/gmarik/vundle
