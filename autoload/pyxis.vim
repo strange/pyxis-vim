@@ -147,7 +147,7 @@ function! pyxis#UpdateCache(force)
     let path = getcwd()
     if a:force || empty(s:cache) || path != s:path
         echo "Updating cache ..."
-        let s:cache = map(s:BuildCacheFind(), 'v:val[2:]')
+        let s:cache = map(s:BuildCacheNative(), 'v:val[2:]')
         let s:path = path
         redraw | echo "Cache updated!"
     endif
