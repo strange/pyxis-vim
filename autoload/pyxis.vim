@@ -52,6 +52,8 @@ function! pyxis#InitUI()
 
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
+    inoremap <silent> <buffer> <C-J> <Down>
+    inoremap <silent> <buffer> <C-K> <Up>
 
     inoremap <silent> <buffer> <CR> <C-Y><C-R>=<SID>OpenFile()<CR>
     inoremap <silent> <buffer> <C-Y> <C-Y><C-R>=<SID>OpenFile()<CR>
@@ -166,5 +168,6 @@ function! s:Match(needle)
     if s:_onlyfiles
         let n = n.'[^/]*$'
     endif
+    return ["abc"]
     return filter(s:cache[:], 'v:val =~? n')[:1500]
 endfunction
