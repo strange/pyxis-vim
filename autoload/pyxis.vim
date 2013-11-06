@@ -11,11 +11,11 @@ if !exists("g:pyxis_ignore")
     let g:pyxis_ignore = "*.jpeg,*.jpg,*.pyo,*.pyc,.DS_Store,*.png,*.bmp,
                          \*.gif,*~,*.o,*.class,*.ai,*.plist,*.swp,*.mp3,*.db,
                          \*.beam,*.pdf,*.swf,*.flv,*.mpeg,*.mp4,*.zip,*.tar,
-                         \*.tgz,*.tar.gz,*.wmv,*git*,*/.*/*,*.o,*.hi,*.nib,
+                         \*.tgz,*.tar.gz,*.wmv,*git*,*.o,*.hi,*.nib,
                          \*.tiff"
 endif
 
-let s:_prompt = '> '
+let s:_prompt = '≫ '
 
 function! pyxis#InitUI()
     let s:_completeopt = &completeopt
@@ -52,6 +52,8 @@ function! pyxis#InitUI()
 
     inoremap <silent> <buffer> <Tab> <Down>
     inoremap <silent> <buffer> <S-Tab> <Up>
+    inoremap <silent> <buffer> <C-N> <Down>
+    inoremap <silent> <buffer> <C-P> <Up>
     inoremap <silent> <buffer> <C-J> <Down>
     inoremap <silent> <buffer> <C-K> <Up>
 
@@ -137,7 +139,8 @@ function! s:BuildCacheFind()
     let ignore = split(g:pyxis_ignore, ',')
     let input = map(ignore, '" -not -iname \x27".v:val."\x27"')
     call add(input, " -not -path './.\*'")
-    return split(system('find -L . -type f '.join(input, ' ')), '\n')
+    return map(split(system('find -L . -type f '.join(input, ' ')), '\n'),
+               'v:val[2:]')
 endfunction
 
 function! s:BuildCacheNative()
@@ -145,7 +148,12 @@ function! s:BuildCacheNative()
     let &wildignore = g:pyxis_ignore
     let results = globpath('.', "**/*")
     let &wildignore = wildignore
-    return filter(split(results, '\n'), '!isdirectory(v:val)')
+    return map(filter(split(results, '\n'), '!isdirectory(v:val)'), 'v:val[2:]')
+endfunction
+
+function! s:BuildCacheGit()
+    let results = system("git grep --untracked -I -L -v '' 2> /dev/null")
+    return split(results, '\n')
 endfunction
 
 let s:path = ''
@@ -154,7 +162,7 @@ function! pyxis#UpdateCache(force)
     let path = getcwd()
     if a:force || empty(s:cache) || path != s:path
         echo "Updating cache ..."
-        let s:cache = map(s:BuildCacheNative(), 'v:val[2:]')
+        let s:cache = s:BuildCacheGit()
         let s:path = path
         redraw | echo "Cache updated!"
     endif
@@ -168,6 +176,5 @@ function! s:Match(needle)
     if s:_onlyfiles
         let n = n.'[^/]*$'
     endif
-    return ["abc"]
     return filter(s:cache[:], 'v:val =~? n')[:1500]
 endfunction
