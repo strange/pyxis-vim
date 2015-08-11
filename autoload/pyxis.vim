@@ -15,7 +15,7 @@ if !exists("g:pyxis_ignore")
                          \*.tiff"
 endif
 
-let s:_prompt = '≫ '
+let s:_prompt = '> '
 
 function! pyxis#InitUI()
     let s:_completeopt = &completeopt
@@ -140,7 +140,7 @@ function! s:BuildCacheFind()
     let input = map(ignore, '" -not -iname \x27".v:val."\x27"')
     call add(input, " -not -path './.\*'")
     return map(split(system('find -L . -type f '.join(input, ' ')), '\n'),
-               'v:val[2:]')
+                \ 'v:val[2:]')
 endfunction
 
 function! s:BuildCacheNative()
