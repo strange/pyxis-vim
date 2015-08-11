@@ -162,7 +162,11 @@ function! pyxis#UpdateCache(force)
     let path = getcwd()
     if a:force || empty(s:cache) || path != s:path
         echo "Updating cache ..."
-        let s:cache = s:BuildCacheGit()
+        call system("git status")
+        if v:shell_error
+            let s:cache = s:BuildCacheNative()
+        else
+            let s:cache = s:BuildCacheGit()
         let s:path = path
         redraw | echo "Cache updated!"
     endif
