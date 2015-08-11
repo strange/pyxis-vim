@@ -1,6 +1,6 @@
 " A simple Vim script that makes for quick finding and opening files
-" Maintainer: Gustaf Sjöberg <gs@pipsq.com>
-" Last Change: 2012 Jan 29
+" Maintainer: Gustaf Sjöberg <gs@trell.se>
+" Last Change: 2015 Aug 11
 
 if exists("g:loaded_pyxis")
     finish
